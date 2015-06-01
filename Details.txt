@@ -13,7 +13,7 @@ There are many concepts in networking for a any student to learn in depth and I 
 I always likes to revise them.
 
 
-##It took me entire weekend with two sleepless nights to complete these programs. 
+##I solved first 5 programs in python and successfully executed them.It took me entire weekend with two sleepless nights to complete these programs. 
 I tried my level best and worked on this assignment.
 
 ## In my Internetworking course I have configured VLANs on switches in cisco lab
