@@ -38,6 +38,5 @@ In try block in for loop we have to pass  --nb_subnet into options and integer v
 The rest of the program will be same as the above program.
 
 5.In this program for calculating base entry and its CIDR we have to use split function for splitting base address and its CIDR.  
-The arguments are passed into inp value that is input value. 
-Now the split function should be applied to the inp value. Here we split base entry and CIDR by / and is to be stored into some variable.  
+Now the split function should be applied to the arg so that base entry and CIDR gets split by '/'. The IPBASE gets stored in 1st element of NETBLOCK. When the BLOCKLEN gets incremented, IPBASE value also gets incemented. Here we define to functions ip2int(ip) and int2ip(int_value) to print the correct ip value. 
 
