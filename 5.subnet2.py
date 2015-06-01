@@ -1,69 +1,74 @@
 #!/usr/bin/python
 import sys,getopt
 
-def subnets(argv):
+def subnet_generator(argv):
 	CIDR = 30
-	NETCOUNT = 32
-
-	NETBLOCK = ["netaddress","host1","host2","broadcast"]
-	BLOCKLEN = (2**(32-CIDR))
-	
-
 	try:
-		opts,args=getopt.getopt(argv,None,['base='])
-
-		if not opts:
-			print 'Usage Error:<filename> --base=<ipaddress>'
-			sys.exit(2)
+		opts,args = getopt.getopt(argv,None,["base="])
 
 		for opt,arg in opts:
 			if opt == "--base":
-				inp=arg
-				#print "IP address:"+inp
-				#print BLOCKLEN
-		#inp = ' inp/NETCOUNT'
-		x= inp.split("/")
-		inp =x[0]
-		NETCOUNT =int(x[1])
+				IPBASE,COUNT = arg.split('/')
+				COUNT = int(COUNT)
+
 		mask = netmask(CIDR)
-		for i in range(2**(32-NETCOUNT)):
-			NETBLOCK[0] = inp
+		NETCOUNT = 2**(30-COUNT)
+		IPBASE = ip2int(IPBASE)
+		BLOCKLEN = (2**(32-CIDR))
+		NETBLOCK = [0,0,0,0]
+
+		for i in range(NETCOUNT):
+			NETBLOCK[0] = IPBASE
 			for j in range(1,BLOCKLEN):
-				inp = address_inc(inp,1)
-				NETBLOCK[j] = inp
-			print str(i+1)+' - ip block : '+NETBLOCK[0]+'/'+str(CIDR)+', IPs '+NETBLOCK[1]+' : '+NETBLOCK[2]+', netmask '+mask+' (cidr /'+str(CIDR)+')' 
-			inp = address_inc(inp,1)
+				IPBASE += 1
+				NETBLOCK[j] = IPBASE
+
+			print str(i+1)+' - ip block: '+int2ip(NETBLOCK[0])+'/'+str(CIDR)+', IPs '+int2ip(NETBLOCK[1])+' : '+int2ip(NETBLOCK[2])+', netmask '+mask+' (cidr /'+str(CIDR)+')'
+			IPBASE += 1
 
 	except getopt.GetoptError:
-		print 'Usage Error:<filename> --base=<ipaddress>'
+		print 'Usage Error: <filename> --base=<IP address/MASK>'
+		sys.exit(2)
+	except ValueError:
+		print 'Data Error: Invalid argument value.'
+
+
+def ip2int(ip):
+	try:
+		ipaddr=ip.split('.')
+
+		if (len(ipaddr) != 4):
+			sys.exit("Data Error: Invalid IP address.")
+
+		result = 0
+		for i in range(4):
+			ipaddr[i] = int(ipaddr[i])
+			
+			if (ipaddr[i] <0) or (ipaddr[i] >255):
+				sys.exit("Data Error: Invalid IP address.")
+
+			result <<= 8
+			result |= (ipaddr[i] & 0xff)
+		return result
+
+	except AttributeError:
+		print 'Data Error: Invalid IP address.'
 		sys.exit(2)
 
-def address_inc(ip,step):
-	flag = 0
-	octet=ip.split('.')
 
-	if len(octet) != 4 :
-		print 'Error: Invalid IP Address.'
+def int2ip(int_value):
+	try:
+		int_value = int(int_value)
+
+		o1 = ((int_value >> 24)&0xff)
+		o2 = ((int_value >> 16)&0xff)
+		o3 = ((int_value >> 8)&0xff)
+		o4 = ((int_value)&0xff)
+		return str(o1)+'.'+str(o2)+'.'+str(o3)+'.'+str(o4)
+
+	except ValueError:
+		print 'Data Error: Invalid integer value.'
 		sys.exit(2)
-
-	for i in range(4):
-		octet[i] = int(octet[i])
-		if octet[i] >= 256:
-			flag = 1
-
-	if flag == 1:
-		print 'Error: Invalid IP Address.'
-		sys.exit(2)
-
-
-	for i in range(step):
-		octet[3] += 1
-
-		for j in range(3,-1,-1):
-			if octet[j] == 256:
-				octet[j-1] += 1
-				octet[j] = 0
-	return str(octet[0])+'.'+str(octet[1])+'.'+str(octet[2])+'.'+str(octet[3])
 
 def netmask(cidr):
 	mask = [255,255,255,255]
@@ -78,8 +83,10 @@ def netmask(cidr):
 			mask[i] = 0
 	return str(mask[0])+'.'+str(mask[1])+'.'+str(mask[2])+'.'+str(mask[3])
 
+
 if __name__ == "__main__":
-	  subnets(sys.argv[1:])
-
-
-
+	if len(sys.argv) >=2:
+		subnet_generator(sys.argv[1:])
+	else:
+		print 'Usage Error: <filename> --base=<IP address/MASK>'
+		sys.exit(2)
