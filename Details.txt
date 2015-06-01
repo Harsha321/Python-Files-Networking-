@@ -1,4 +1,4 @@
-##I am a beginner in Python. I started working on Python for my final project. 
+##I am a beginner in Python. I am working on Python for my final project. 
 My final Masters Project is entirely based on python. So I am concentarting more on it and learning more and more.
 Also I am currently working on "SDN Approach for Mitigating DDOS Attacks"  using "pox controller". 
 This pox controller has to be designed in Python. 
@@ -10,7 +10,7 @@ I learned using git from this course. I liked it and I am planning to upload all
 
 ##I am good at networking. 
 There are many concepts in networking for a any student to learn in depth and I am learning it as much as I can. 
-I always tries to revise them.
+I always likes to revise them.
 
 
 ##It took me entire weekend with two sleepless nights to complete these programs. 
